@@ -1,0 +1,3065 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MetaDerby - &#128173;｜ama</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+            font-family: Whitney;
+            font-weight: 300;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+            font-family: Whitney;
+            font-weight: 400;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+            font-family: Whitney;
+            font-weight: 500;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+            font-family: Whitney;
+            font-weight: 600;
+        }
+
+        @font-face {
+            src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+            font-family: Whitney;
+            font-weight: 700;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #36393e;
+            color: #dcddde;
+            font-family: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 17px;
+            font-weight: 400;
+        }
+
+        a {
+            color: #00aff4;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            object-fit: contain;
+            image-rendering: high-quality;
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        .preamble {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            max-width: 100%;
+            padding: 1rem;
+        }
+
+        .preamble__guild-icon-container {
+            grid-column: 1;
+        }
+
+        .preamble__guild-icon {
+            max-width: 88px;
+            max-height: 88px;
+        }
+
+        .preamble__entries-container {
+            grid-column: 2;
+            margin-left: 1rem;
+        }
+
+        .preamble__entry {
+            margin-bottom: 0.15rem;
+            color: #ffffff;
+            font-size: 1.4rem;
+        }
+
+        .preamble__entry--small {
+            font-size: 1rem;
+        }
+
+        .chatlog {
+            padding: 1rem 0;
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatlog__message-group {
+            margin-bottom: 1rem;
+        }
+
+        .chatlog__message-container {
+            background-color: transparent;
+            transition: background-color 1s ease;
+        }
+
+        .chatlog__message-container--highlighted {
+            background-color: rgba(114, 137, 218, 0.2);
+        }
+
+        .chatlog__message-container--pinned {
+            background-color: rgba(249, 168, 37, 0.05);
+        }
+
+        .chatlog__message {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            padding: 0.15rem 0;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__message:hover {
+            background-color: #32353b;
+        }
+
+        .chatlog__message:hover .chatlog__short-timestamp {
+            display: block;
+        }
+
+        .chatlog__message-aside {
+            grid-column: 1;
+            width: 72px;
+            padding: 0.15rem 0.15rem 0 0.15rem;
+            text-align: center;
+        }
+
+        .chatlog__reference-symbol {
+            height: 10px;
+            margin: 6px 4px 4px 36px;
+            border-left: 2px solid #4f545c;
+            border-top: 2px solid #4f545c;
+            border-radius: 8px 0 0 0;
+        }
+
+        .chatlog__avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .chatlog__short-timestamp {
+            display: none;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__message-primary {
+            grid-column: 2;
+            min-width: 0;
+        }
+
+        .chatlog__reference {
+            display: flex;
+            margin-bottom: 0.15rem;
+            align-items: center;
+            color: #b5b6b8;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chatlog__reference-avatar {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.25rem;
+            border-radius: 50%;
+        }
+
+        .chatlog__reference-author {
+            margin-right: 0.3rem;
+            font-weight: 600;
+        }
+
+        .chatlog__reference-content {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chatlog__reference-link {
+            cursor: pointer;
+        }
+
+        .chatlog__reference-link * {
+            display: inline;
+            pointer-events: none;
+        }
+
+        .chatlog__reference-link .hljs {
+            display: inline;
+        }
+
+        .chatlog__reference-link:hover {
+            color: #ffffff;
+        }
+
+        .chatlog__reference-link:hover *:not(.chatlog__markdown-spoiler) {
+            color: inherit;
+        }
+
+        .chatlog__reference-edited-timestamp {
+            margin-left: 0.25rem;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__header {
+            margin-bottom: 0.1rem;
+        }
+
+        .chatlog__author {
+            font-weight: 500;
+            color: #ffffff;
+        }
+
+        .chatlog__bot-label {
+            position: relative;
+            top: -0.1rem;
+            margin-left: 0.3rem;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            background-color: #5865F2;
+            color: #ffffff;
+            font-size: 0.625rem;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .chatlog__timestamp {
+            margin-left: 0.3rem;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__content {
+            padding-right: 1rem;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+        }
+
+        .chatlog__edited-timestamp {
+            margin-left: 0.15rem;
+            color: #a3a6aa;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .chatlog__attachment {
+            position: relative;
+            width: fit-content;
+            margin-top: 0.3rem;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .chatlog__attachment--hidden {
+            cursor: pointer;
+            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatlog__attachment--hidden * {
+            pointer-events: none;
+        }
+
+        .chatlog__attachment-spoiler-caption {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: 999;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #dcddde;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.05rem;
+        }
+
+        .chatlog__attachment--hidden .chatlog__attachment-spoiler-caption {
+            display: block;
+        }
+
+        .chatlog__attachment--hidden:hover .chatlog__attachment-spoiler-caption {
+            color: #fff;
+        }
+
+        .chatlog__attachment-media {
+            max-width: 45vw;
+            max-height: 500px;
+            vertical-align: top;
+            border-radius: 3px;
+        }
+
+        .chatlog__attachment--hidden .chatlog__attachment-media {
+            filter: blur(44px);
+        }
+
+        .chatlog__attachment-generic {
+            max-width: 520px;
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            border: 1px solid #292b2f;
+            border-radius: 3px;
+            background-color: #2f3136;
+            overflow: hidden;
+        }
+
+        .chatlog__attachment--hidden .chatlog__attachment-generic {
+            filter: blur(44px);
+        }
+
+        .chatlog__attachment-generic-icon {
+            float: left;
+            width: 30px;
+            height: 100%;
+            margin-right: 10px;
+        }
+
+        .chatlog__attachment-generic-size {
+            color: #72767d;
+            font-size: 12px;
+        }
+
+        .chatlog__attachment-generic-name {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .chatlog__embed {
+            display: flex;
+            margin-top: 0.3rem;
+            max-width: 520px;
+        }
+
+        .chatlog__embed-color-pill {
+            flex-shrink: 0;
+            width: 0.25rem;
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+
+        .chatlog__embed-color-pill--default {
+            background-color: #202225;
+        }
+
+        .chatlog__embed-content-container {
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem 0.6rem;
+            border: 1px solid rgba(46, 48, 54, 0.6);
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            background-color: rgba(46, 48, 54, 0.3);
+        }
+
+        .chatlog__embed-content {
+            display: flex;
+            width: 100%;
+        }
+
+        .chatlog__embed-text {
+            flex: 1;
+        }
+
+        .chatlog__embed-author-container {
+            display: flex;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .chatlog__embed-author-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .chatlog__embed-author {
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 600;
+            direction: ltr;
+            unicode-bidi: bidi-override;
+        }
+
+        .chatlog__embed-author-link {
+            color: #ffffff;
+        }
+
+        .chatlog__embed-title {
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .chatlog__embed-description {
+            color: #dcddde;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .chatlog__embed-fields {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0 0.5rem;
+        }
+
+        .chatlog__embed-field {
+            flex: 0;
+            min-width: 100%;
+            max-width: 506px;
+            padding-top: 0.6rem;
+            font-size: 0.875rem;
+        }
+
+        .chatlog__embed-field--inline {
+            flex: 1;
+            flex-basis: auto;
+            min-width: 50px;
+        }
+
+        .chatlog__embed-field-name {
+            margin-bottom: 0.2rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .chatlog__embed-field-value {
+            color: #dcddde;
+            font-weight: 500;
+        }
+
+        .chatlog__embed-thumbnail {
+            flex: 0;
+            max-width: 80px;
+            max-height: 80px;
+            margin-left: 1.2rem;
+            border-radius: 3px;
+        }
+
+        .chatlog__embed-image-container {
+            margin-top: 0.6rem;
+        }
+
+        .chatlog__embed-image {
+            max-width: 500px;
+            max-height: 400px;
+            border-radius: 3px;
+        }
+
+        .chatlog__embed-footer {
+            margin-top: 0.6rem;
+            color: #dcddde;
+        }
+
+        .chatlog__embed-footer-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.2rem;
+            border-radius: 50%;
+            vertical-align: middle;
+        }
+
+        .chatlog__embed-footer-text {
+            vertical-align: middle;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .chatlog__embed-plainimage {
+            max-width: 45vw;
+            max-height: 500px;
+            vertical-align: top;
+            border-radius: 3px;
+        }
+
+        .chatlog__embed-spotify {
+            border: 0;
+        }
+
+        .chatlog__embed-youtube-container {
+            margin-top: 0.6rem;
+        }
+
+        .chatlog__embed-youtube {
+            border: 0;
+            border-radius: 3px;
+        }
+
+        .chatlog__sticker {
+            width: 180px;
+            height: 180px;
+        }
+
+        .chatlog__sticker--media {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .chatlog__reactions {
+            display: flex;
+        }
+
+        .chatlog__reaction {
+            display: flex;
+            margin: 0.35rem 0.1rem 0.1rem 0;
+            padding: 0.125rem 0.375rem;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background-color: #2f3136;
+            align-items: center;
+        }
+
+        .chatlog__reaction:hover {
+            border: 1px solid hsla(0,0%,100%,.2);
+            background-color: transparent;
+        }
+
+        .chatlog__reaction-count {
+            min-width: 9px;
+            margin-left: 0.35rem;
+            color: #b9bbbe;
+            font-size: 0.875rem;
+        }
+
+        .chatlog__reaction:hover .chatlog__reaction-count {
+            color: #dcddde;
+        }
+
+        .chatlog__markdown {
+            max-width: 100%;
+            line-height: 1.3;
+            overflow-wrap: break-word;
+        }
+
+        .chatlog__markdown-preserve {
+            white-space: pre-wrap;
+        }
+
+        .chatlog__markdown-spoiler {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .chatlog__markdown-spoiler--hidden {
+            cursor: pointer;
+            background-color: #202225;
+            color: rgba(0, 0, 0, 0);
+        }
+
+        .chatlog__markdown-spoiler--hidden:hover {
+            background-color: rgba(32, 34, 37, 0.8);
+        }
+
+        .chatlog__markdown-spoiler--hidden::selection {
+            color: rgba(0, 0, 0, 0);
+        }
+
+        .chatlog__markdown-quote {
+            display: flex;
+            margin: 0.05rem 0;
+        }
+
+        .chatlog__markdown-quote-border {
+            margin-right: 0.5rem;
+            border: 2px solid #4f545c;
+            border-radius: 3px;
+        }
+
+        .chatlog__markdown-pre {
+            background-color: #2f3136;
+            font-family: "Consolas", "Courier New", Courier, monospace;
+        }
+
+        .chatlog__markdown-pre--multiline {
+            margin-top: 0.25rem;
+            padding: 0.5rem;
+            border: 2px solid #282b30;
+            border-radius: 5px;
+            color: #b9bbbe;
+        }
+
+        .chatlog__markdown-pre--multiline.hljs {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        .chatlog__markdown-pre--inline {
+            padding: 2px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+
+        .chatlog__markdown-mention {
+            border-radius: 3px;
+            padding: 0 2px;
+            background-color: rgba(88, 101, 242, .3);
+            color: #dee0fc;
+            font-weight: 500;
+        }
+
+        .chatlog__markdown-mention:hover {
+            background-color: #5865f2;
+            color: #ffffff
+        }
+
+        .chatlog__markdown-timestamp {
+            border-radius: 3px;
+            padding: 0 2px;
+            color: #a3a6aa;
+        }
+
+        .chatlog__emoji {
+            width: 1.325rem;
+            height: 1.325rem;
+            margin: 0 0.06rem;
+            vertical-align: -0.4rem;
+        }
+
+        .chatlog__emoji--small {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .chatlog__emoji--large {
+            width: 2.8rem;
+            height: 2.8rem;
+        }
+
+        .postamble {
+            padding: 1.25rem;
+        }
+
+        .postamble__entry {
+            color: #ffffff;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.chatlog__markdown-pre--multiline').forEach(e => hljs.highlightBlock(e));
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.8.1/lottie.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.chatlog__sticker--media[data-source]').forEach(e => {
+                const imageDataUrl = e.getAttribute('data-source');
+
+                const anim = lottie.loadAnimation({
+                  container: e,
+                  renderer: 'svg',
+                  loop: true,
+                  autoplay: true,
+                  path: imageDataUrl
+                });
+
+                anim.addEventListener('data_failed', () =>
+                    e.innerHTML = '<strong>[Sticker cannot be rendered]</strong>'
+                );
+            });
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('chatlog__message-container-' + id);
+            if (!element)
+                return;
+
+            event.preventDefault();
+            element.classList.add('chatlog__message-container--highlighted');
+
+            window.scrollTo({
+                top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                behavior: 'smooth'
+            });
+
+            window.setTimeout(function() {
+                element.classList.remove('chatlog__message-container--highlighted');
+            }, 2000);
+        }
+
+        function showSpoiler(event, element) {
+            if (!element)
+                return;
+
+            if (element.classList.contains('chatlog__attachment--hidden')) {
+                event.preventDefault();
+                element.classList.remove('chatlog__attachment--hidden');
+            }
+
+            if (element.classList.contains('chatlog__markdown-spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('chatlog__markdown-spoiler--hidden');
+            }
+        }
+    </script>
+
+    <svg style="display: none">
+        <symbol id="attachment-icon" viewBox="0 0 720 960">
+            <path fill="#f4f5fb" d="M50,935a25,25,0,0,1-25-25V50A25,25,0,0,1,50,25H519.6L695,201.32V910a25,25,0,0,1-25,25Z"/>
+            <path fill="#7789c4" d="M509.21,50,670,211.63V910H50V50H509.21M530,0H50A50,50,0,0,0,0,50V910a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50h0V191Z"/>
+            <path fill="#f4f5fb" d="M530,215a25,25,0,0,1-25-25V50a25,25,0,0,1,16.23-23.41L693.41,198.77A25,25,0,0,1,670,215Z"/>
+            <path fill="#7789c4" d="M530,70.71,649.29,190H530V70.71M530,0a50,50,0,0,0-50,50V190a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50Z"/>
+        </symbol>
+    </svg>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="https://cdn.discordapp.com/icons/928170795707023380/b720ecebdc260db4d9237f4266e0e554.png" alt="Guild icon" loading="lazy">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">MetaDerby</div>
+        <div class="preamble__entry">IMPORTANT / &#128173;｜ama</div>
+
+
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971743638679867413" class="chatlog__message-container " data-message-id="971743638679867413">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:02 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Hey everybody! Welcome to our MetaDerby Beta Game Launch AMA! We have 5000 $HOOF worth of prizes today!! Thanks for all your questions so far. 
+
+Today we have the core team here to answer all your questions and deliver some serious hype for Beta Launch tomorrow.
+
+Are you ready??</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="rocket">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128640;" src="https://twemoji.maxcdn.com/2/svg/1f680.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">15</span>
+                            </div>
+                            <div class="chatlog__reaction" title="checkered_flag">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127937;" src="https://twemoji.maxcdn.com/2/svg/1f3c1.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="gem">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128142;" src="https://twemoji.maxcdn.com/2/svg/1f48e.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="100">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128175;" src="https://twemoji.maxcdn.com/2/svg/1f4af.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="horse_racing_tone1">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127943;&#127995;" src="https://twemoji.maxcdn.com/2/svg/1f3c7-1f3fb.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971743761572958248" class="chatlog__message-container " data-message-id="971743761572958248">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:02 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Hey riders!!!!!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="horse_racing">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127943;" src="https://twemoji.maxcdn.com/2/svg/1f3c7.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="handshake">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129309;" src="https://twemoji.maxcdn.com/2/svg/1f91d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971743828707004496" class="chatlog__message-container " data-message-id="971743828707004496">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/575401389908426753/28006a3269ac3bddbfe36195b62e2674.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="misu &#127814;&#127825;&#128081;&#129421;#6969" data-user-id="575401389908426753">MetaMike | metaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:03 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Hello everyone!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="Yaymin">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="Yaymin" src="https://cdn.discordapp.com/emojis/958982742857621554.png" loading="lazy">
+                                <span class="chatlog__reaction-count">15</span>
+                            </div>
+                            <div class="chatlog__reaction" title="gem">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128142;" src="https://twemoji.maxcdn.com/2/svg/1f48e.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">6</span>
+                            </div>
+                            <div class="chatlog__reaction" title="cooldoge">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="cooldoge" src="https://cdn.discordapp.com/emojis/894110852360319068.gif" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="handshake">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129309;" src="https://twemoji.maxcdn.com/2/svg/1f91d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971744195779915786" class="chatlog__message-container " data-message-id="971744195779915786">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:04 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">heyheyhey!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="love_you_gesture">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129311;" src="https://twemoji.maxcdn.com/2/svg/1f91f.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="muscle">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128170;" src="https://twemoji.maxcdn.com/2/svg/1f4aa.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971744370552352808" class="chatlog__message-container " data-message-id="971744370552352808">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:05 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Alright team!
+ <span class="chatlog__markdown-mention" title="misu &#127814;&#127825;&#128081;&#129421;#6969">@MetaMike | metaDerby</span> <span class="chatlog__markdown-mention" title="0xKrypton#4415">@Muse ｜MetaDerby</span> <span class="chatlog__markdown-mention" title="komoko#7650">@Komoko | MetaDerby</span>
+
+Select your favorite questions and hit us with some awesome info for our community!
+
+(And thanks to <span class="chatlog__markdown-mention" title="KIRA｜きら#4444">@KIRA｜&#127471;&#127477; MetaDerby</span> for all the hard work organizing and hosting <img loading="lazy" class="chatlog__emoji " alt="😄" title="smile" src="https://twemoji.maxcdn.com/2/svg/1f604.svg"> )</span>
+
+                            <span class="chatlog__edited-timestamp" title="05-May-22 02:05 PM">(edited)</span>
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="heart">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="❤️" src="https://twemoji.maxcdn.com/2/svg/2764.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">10</span>
+                            </div>
+                            <div class="chatlog__reaction" title="100">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128175;" src="https://twemoji.maxcdn.com/2/svg/1f4af.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">9</span>
+                            </div>
+                            <div class="chatlog__reaction" title="eyes">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128064;" src="https://twemoji.maxcdn.com/2/svg/1f440.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="pinched_fingers">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129292;" src="https://twemoji.maxcdn.com/2/svg/1f90c.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div id="chatlog__message-container-971744400529059870" class="chatlog__message-container " data-message-id="971744400529059870">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <div class="chatlog__short-timestamp" title="05-May-22 02:05 PM">14:05</div>
+            </div>
+
+            <div class="chatlog__message-primary">
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve"><img loading="lazy" class="chatlog__emoji " alt="😄" title="smile" src="https://twemoji.maxcdn.com/2/svg/1f604.svg"> *</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971745083894423573" class="chatlog__message-container " data-message-id="971745083894423573">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/575401389908426753/28006a3269ac3bddbfe36195b62e2674.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/900129292615286794/e8bf2a1165130b6faa6debabe0d9b5bb.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="ojneedham&#120071;&#120098;&#120094;&#120097; a&#120109;&#120098;z ℑ&#120112;&#120105;&#120094;#4335">ojneedham&#120071;&#120098;&#120094;&#120097; a&#120109;&#120098;z ℑ&#120112;&#120105;&#120094;</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971715456719269919&#39;)">
+Are there any ideas for game development around measures which will help with horse hyper inflation after breeding? Imagine there are some questions around when lots of horses have been bred. I.e horse burning possibilities? <img loading="lazy" class="chatlog__emoji " alt="🙂" title="slight_smile" src="https://twemoji.maxcdn.com/2/svg/1f642.svg">                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="misu &#127814;&#127825;&#128081;&#129421;#6969" data-user-id="575401389908426753">MetaMike | metaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:08 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">So we already have max limit on how many times a horse can breed coupled with cool down timers.  We have also discussed a possibility of retiring horses after they have participated in X number of races and even considered mimicking the real world, where horses may get injured during races and put out of commission.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="heart_eyes">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128525;" src="https://twemoji.maxcdn.com/2/svg/1f60d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">8</span>
+                            </div>
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971745761333215252" class="chatlog__message-container " data-message-id="971745761333215252">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/758325697474986015/06d5c544c25bc0050e4faaa624bd9a75.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(231, 76, 60)" title="Zwaynnn#9809">Zol &#128065; | MetaDerby</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971718681165979669&#39;)">
+<img loading="lazy" class="chatlog__emoji " alt="🐎" title="racehorse" src="https://twemoji.maxcdn.com/2/svg/1f40e.svg"> <strong> There are a lot of existing and upcomingNFT games this 2022,  my question is &quot;What is your edge or atleast 1 best feature of your project that make it ahead of other NFT games?</strong>                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:10 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Yes, the industry is hot right now, even with the current market conditions! Lots of projects building at the moment.
+
+We&#39;ve got a really solid team that constantly delivers on its plans. We move quick at MetaDerby, and we&#39;ve had some huge success with our $DBY and $HOOF token launches (selling out on IDO) and DerbyTicket NFT launch (sold out in 5 seconds). Also, we have the best community!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="Yaymin">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="Yaymin" src="https://cdn.discordapp.com/emojis/958982742857621554.png" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971746264989462528" class="chatlog__message-container " data-message-id="971746264989462528">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/956903616038469704/cd54bbba39ff28a7687b8ea988fdc641.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="csgo#4087">csgo</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971742444783829022&#39;)">
+The price of the LFG loot has dumpped a lot as the snapshot of the box is over, how will it be useful in the future?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:12 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">For LFGLoot holders, holders are looking at potential token airdrops, access to exclusive MetaDerby Discord membership channel, and whitelisting access to future in-game assets sales such as land sale. You will also have a chance to take part and be part of our testing group whenever we release new features for the game.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="eyes">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128064;" src="https://twemoji.maxcdn.com/2/svg/1f440.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971746478265610300" class="chatlog__message-container " data-message-id="971746478265610300">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/950636839839076382/01b4fc2408bd6c5d4b8e8cd0cd17de52.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="AltcoinBuddy | ToonLands#6529">AltcoinBuddy | ToonLands</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971725592544280606&#39;)">
+Initially it was said that the Top 3 winning horses will be rewarded, Now the whitepaper says Top 6 winning horses will be rewarded, Which is correct ? Could you clarify this ?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:13 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Hey thanks for the noticing this! We are constantly updating our tokenomics and game mechanisms to make it more fun &amp; sustainable. 
+All the updates are subject to our whitepaper. So yes, now the top 6 players in a race can share the prize pool. 
+
+Please refer to the whitepaper for more details: <a href="https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/horse-racing">https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/horse-racing</a></span>
+
+                    </div>
+
+
+                        <div class="chatlog__embed">
+                                <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                            <div class="chatlog__embed-content-container">
+                                <div class="chatlog__embed-content">
+                                    <div class="chatlog__embed-text">
+
+                                            <div class="chatlog__embed-title">
+                                                    <a class="chatlog__embed-title-link" href="https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/horse-racing">
+                                                        <div class="chatlog__markdown chatlog__markdown-preserve">Horse Racing</div>
+                                                    </a>
+                                            </div>
+
+
+                                    </div>
+
+                                        <div class="chatlog__embed-thumbnail-container">
+                                            <a class="chatlog__embed-thumbnail-link" href="https://images-ext-2.discordapp.net/external/SggWKiX5nQ183ovLYqpikcXCHmOGIyMVdDU5dALNdB4/%3Fcolor%3D%26logo%3Dhttps%253A%252F%252F3169125608-files.gitbook.io%252F~%252Ffiles%252Fv0%252Fb%252Fgitbook-x-prod.appspot.com%252Fo%252Fspaces%25252Fk32UYaZpJHnhOvZBfJIf%25252Ficon%25252FXXnw1SshFRgloPG5HbhH%25252Fblue.png%253Falt%253Dmedia%2526token%253D2774c8e9-3c84-48e5-b5fb-aa1b1d95ffd2%26theme%3D/https/app.gitbook.com/share/space/thumbnail/k32UYaZpJHnhOvZBfJIf/page/26Uip9vFEZqxiFwAPTOy.png">
+                                                <img class="chatlog__embed-thumbnail" src="https://images-ext-2.discordapp.net/external/SggWKiX5nQ183ovLYqpikcXCHmOGIyMVdDU5dALNdB4/%3Fcolor%3D%26logo%3Dhttps%253A%252F%252F3169125608-files.gitbook.io%252F~%252Ffiles%252Fv0%252Fb%252Fgitbook-x-prod.appspot.com%252Fo%252Fspaces%25252Fk32UYaZpJHnhOvZBfJIf%25252Ficon%25252FXXnw1SshFRgloPG5HbhH%25252Fblue.png%253Falt%253Dmedia%2526token%253D2774c8e9-3c84-48e5-b5fb-aa1b1d95ffd2%26theme%3D/https/app.gitbook.com/share/space/thumbnail/k32UYaZpJHnhOvZBfJIf/page/26Uip9vFEZqxiFwAPTOy.png" alt="Thumbnail" loading="lazy">
+                                            </a>
+                                        </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="Lovemin">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="Lovemin" src="https://cdn.discordapp.com/emojis/958982463995121674.png" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="tada">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127881;" src="https://twemoji.maxcdn.com/2/svg/1f389.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971746865781538837" class="chatlog__message-container " data-message-id="971746865781538837">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/758325697474986015/06d5c544c25bc0050e4faaa624bd9a75.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(231, 76, 60)" title="Zwaynnn#9809">Zol &#128065; | MetaDerby</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971740566016643073&#39;)">
+<img loading="lazy" class="chatlog__emoji " alt="🏇" title="horse_racing" src="https://twemoji.maxcdn.com/2/svg/1f3c7.svg"> <strong> How prepared is your team, so that will have a smooth beta launch tomorrow?</strong>                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:15 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">We have done multiple dry runs and hope it will be a smooth experience for you! But hey, beta testing is for us to collect feedback from players if we missed out anything and collect suggestions to better the experience.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="heart">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="❤️" src="https://twemoji.maxcdn.com/2/svg/2764.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="muscle">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128170;" src="https://twemoji.maxcdn.com/2/svg/1f4aa.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971747220472856616" class="chatlog__message-container " data-message-id="971747220472856616">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/298124322591997953/d525aeead70a1be6a81eff40e2aa71a7.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="0xWhite#0870">0xWhite</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971721311644696586&#39;)">
+Any marketing plan or partnership campaign in the near weeks?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:16 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">We&#39;re gearing up for a Creator Campaign where users can submit their horse stat screenshots, race finishes, class leveling and more and get rewards in return! That&#39;s our next big push. Aaaannd did someone say leaderboard? You&#39;ll have to wait and see.
+
+As for partnerships, we&#39;ve got a few exchanges and projects we&#39;re talking to closely, so expect some exciting developments there.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="ok_hand">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128076;" src="https://twemoji.maxcdn.com/2/svg/1f44c.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="eyes">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128064;" src="https://twemoji.maxcdn.com/2/svg/1f440.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="call_me">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129305;" src="https://twemoji.maxcdn.com/2/svg/1f919.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971747722422013952" class="chatlog__message-container " data-message-id="971747722422013952">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/852787886155759666/72ddc2eaae534b1cc15fe9dfcc0d8003.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="kapisan#2484">kapisan</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971739766498422824&#39;)">
+If I had one paying horse (Common), what would be my estimated earnings per month?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:18 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">It&#39;s hard to provide an estimate and we dont wish to discuss too much about earning. It will rly depends on the genotype of your horse and the random factors when it comes to racing. No one horse wins every time and we love dark horses!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="Yaymin">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="Yaymin" src="https://cdn.discordapp.com/emojis/958982742857621554.png" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                            <div class="chatlog__reaction" title="emoji_44">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="emoji_44" src="https://cdn.discordapp.com/emojis/961620985700831232.gif" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971747882128511056" class="chatlog__message-container " data-message-id="971747882128511056">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 89, 182)" title="SkyC#9809">SkyC</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971747220472856616&#39;)">
+We&#39;re gearing up for a Creator Campaign where users can submit their horse stat screenshots, race finishes, class leveling and more and get rewards in return! That&#39;s our next big push. Aaaannd did someone say leaderboard? You&#39;ll have to wait and see.
+
+As for partnerships, we&#39;ve got a few exchanges and projects we&#39;re talking to closely, so expect some exciting developments there.                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:19 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Actually we just listed on CoinGecko this morning:
+<a href="https://www.coingecko.com/en/coins/metaderby">https://www.coingecko.com/en/coins/metaderby</a></span>
+
+                    </div>
+
+
+                        <div class="chatlog__embed">
+                                <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                            <div class="chatlog__embed-content-container">
+                                <div class="chatlog__embed-content">
+                                    <div class="chatlog__embed-text">
+
+                                            <div class="chatlog__embed-title">
+                                                    <a class="chatlog__embed-title-link" href="https://www.coingecko.com/en/coins/metaderby">
+                                                        <div class="chatlog__markdown chatlog__markdown-preserve">Metaderby price, DBY chart, and market cap | CoinGecko</div>
+                                                    </a>
+                                            </div>
+
+                                            <div class="chatlog__embed-description">
+                                                <div class="chatlog__markdown chatlog__markdown-preserve">View Metaderby crypto price and chart live, DBY market cap, 24-hour trading volume, circulating supply, latest news and more.</div>
+                                            </div>
+
+                                    </div>
+
+                                        <div class="chatlog__embed-thumbnail-container">
+                                            <a class="chatlog__embed-thumbnail-link" href="https://images-ext-1.discordapp.net/external/VlVRENMm6-w79ZpXVijjBQkXSm6e15JmpdXMPpGrpH0/%3F1650974944/https/assets.coingecko.com/coins/images/25242/large/metaderby.png">
+                                                <img class="chatlog__embed-thumbnail" src="https://images-ext-1.discordapp.net/external/VlVRENMm6-w79ZpXVijjBQkXSm6e15JmpdXMPpGrpH0/%3F1650974944/https/assets.coingecko.com/coins/images/25242/large/metaderby.png" alt="Thumbnail" loading="lazy">
+                                            </a>
+                                        </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="rocket">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128640;" src="https://twemoji.maxcdn.com/2/svg/1f680.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">7</span>
+                            </div>
+                            <div class="chatlog__reaction" title="dby">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="dby" src="https://cdn.discordapp.com/emojis/971376649977348136.png" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="hoof">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="hoof" src="https://cdn.discordapp.com/emojis/971376678519603280.png" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="mee6Coins">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="mee6Coins" src="https://cdn.discordapp.com/emojis/955329660089155685.png" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971748235796447302" class="chatlog__message-container " data-message-id="971748235796447302">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/805422164534099980/e9a68166fba826cad40d910c6d9a4afe.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="Katharsis#8700">Katharsis</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971732342550974475&#39;)">
+In addition to this question, will the ratios on this screen you shared earlier be explained in more detail? Is there any difference in chance between common box and legendry box? thanks..                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:20 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Yes sure! 
+
+So each horse has 4 attributes: 
+- bloodline: Man O&#39;War, Standardbreds, Citation, Count Fleets
+- aggressiveness: legendary, epic, elite, rare, pacer 
+- acceleration: legendary, epic, elite, rare, pacer 
+- sprint power: legendary, epic, elite, rare, pacer 
+
+So the rates mean the probability of the horse rarities in each attribute. And yes in general, a horse in the  legendary box has better attributes than a common box, but you&#39;ll only see the exact horse when you open a box. 
+
+ps. this should be a screenshot in our test version. in the official launch, a legendary box is sold at 9600HOOF</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="star_struck">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129321;" src="https://twemoji.maxcdn.com/2/svg/1f929.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">6</span>
+                            </div>
+                            <div class="chatlog__reaction" title="dby">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="dby" src="https://cdn.discordapp.com/emojis/971376649977348136.png" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="hoof">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="hoof" src="https://cdn.discordapp.com/emojis/971376678519603280.png" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="Lovemin">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="Lovemin" src="https://cdn.discordapp.com/emojis/958982463995121674.png" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971748516605087744" class="chatlog__message-container " data-message-id="971748516605087744">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/575401389908426753/28006a3269ac3bddbfe36195b62e2674.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/769825516932038657/a_14e32626eb0805a9145561a21ae7ed66.gif?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(233, 30, 99)" title="beluga#8054">beluga_MetaDerby</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971716641001988096&#39;)">
+1) Realistically speaking , Since most of the players are now-a-days less focused on the long-term development of the game, they are only focused on the first stage of the project and its price. So, do you have any plans to retain and increase the number of users? What strategies does METADERBY use to attract gamers?
+
+2) Since you are focusing on the gaming aspect right now, will you consider collaborating with some famous game streamers, they are very effective in promoting new game projects?
+
+3) Most of the projects nowadays are often left in the middle of operation and often abandoned due to lack of sustainability and incapability to support growth with the market crazily fluctuating. In what efficient way will you be able to go along with market fluctuation? Consider a long bearish market
+
+4) I wonder if the METADERBY platform is specifically for gamers? What about non-gamer users? Can they still generate income even without playing your game? If so, what are the other possible ways? Like scholarship programs or something? 
+
+5) I’ll end it with a fun question, How did the team meet?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="misu &#127814;&#127825;&#128081;&#129421;#6969" data-user-id="575401389908426753">MetaMike | metaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:21 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Well we are releasing different game features as the game is developed.  So firstly will be the race modules. And then there will be breeding, trading, spectating with predictions and then the land ownership.  With the addition of land ownership, this will unlock a lot more different gameplay aspects.  We hope to retain gamers by all of these additions.  But we also want to tie in an entertainment aspect to it as well with Cup Events and shows and even the future addition of other types of games into our metaverse.
+
+We are running several marketing campaigns at the moment and will continue to do so, especially after our game launches publicly.
+
+Our project has solid backers that enable us to develop the game without stressing out too much about funding.  We want metaderby to be a game first, that people enjoy playing.  So o even in a bearish market, people can continue to enjoy playing the game as opposed to just farming it for rewards.
+
+We feel that metaderby is simple for any type of user to understand, so you do not need to be a hardcore gamer to play our game.
+
+Many of our initial team members already knew each other from previously working at Binance.  Although I personally did not work at Binance before, I did make many friends there from my many years in this space and being an early customer.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="rocket">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128640;" src="https://twemoji.maxcdn.com/2/svg/1f680.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971749132404400168" class="chatlog__message-container " data-message-id="971749132404400168">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/888039294231531570/20c58b1a53dcc0fef01bce67774acdfd.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="Bumblebee#9513">Bumblebee</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971738582832259112&#39;)">
+MetaDerby uses AVALANCH blockchain. Sometimes the chain fee are extremaly high. Do you plan to use subnet? How do you plan reduce the fee?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:24 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Subnet is definitely something we&#39;re looking at in the future as we start to see unstable gas prices on avax and we know it can be quite taxing for some players.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="hearts">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="♥️" src="https://twemoji.maxcdn.com/2/svg/2665.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">6</span>
+                            </div>
+                            <div class="chatlog__reaction" title="rocket">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128640;" src="https://twemoji.maxcdn.com/2/svg/1f680.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="Yaymin">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="Yaymin" src="https://cdn.discordapp.com/emojis/958982742857621554.png" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971749452886986802" class="chatlog__message-container " data-message-id="971749452886986802">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/360301374518460417/c2753289503bc01ea2aff9c4836d68de.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(195, 186, 255)" title="石原BB#2628">石原BB</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971723546600542258&#39;)">
+Will support different languages in future?                                    </span>
+
+                                        <span class="chatlog__reference-edited-timestamp" title="05-May-22 12:42 PM">(edited)</span>
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:25 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Yes. Absolutely. Actually, UI/UX support for other languages is a big undertaking, so right now we&#39;re focusing on the current English version of the game.
+
+But our MetaDerby community is very global. Turkey, Japan, Latin America, Europe, China, the US, Africa, SE Asia....people from all over.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_tr">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127481;&#127479;" src="https://twemoji.maxcdn.com/2/svg/1f1f9-1f1f7.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_jp">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127471;&#127477;" src="https://twemoji.maxcdn.com/2/svg/1f1ef-1f1f5.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_us">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127482;&#127480;" src="https://twemoji.maxcdn.com/2/svg/1f1fa-1f1f8.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_eu">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127466;&#127482;" src="https://twemoji.maxcdn.com/2/svg/1f1ea-1f1fa.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_in">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127470;&#127475;" src="https://twemoji.maxcdn.com/2/svg/1f1ee-1f1f3.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="england">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127988;&#917607;&#917602;&#917605;&#917614;&#917607;&#917631;" src="https://twemoji.maxcdn.com/2/svg/1f3f4-e0067-e0062-e0065-e006e-e0067-e007f.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_cn">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127464;&#127475;" src="https://twemoji.maxcdn.com/2/svg/1f1e8-1f1f3.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">6</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_ru">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127479;&#127482;" src="https://twemoji.maxcdn.com/2/svg/1f1f7-1f1fa.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_ar">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127462;&#127479;" src="https://twemoji.maxcdn.com/2/svg/1f1e6-1f1f7.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                            <div class="chatlog__reaction" title="flag_hk">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#127469;&#127472;" src="https://twemoji.maxcdn.com/2/svg/1f1ed-1f1f0.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971750660267708416" class="chatlog__message-container " data-message-id="971750660267708416">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/950633986261135380/499aca60a82e6b98ca268369d77473ca.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="DareDevil#7609">DareDevil</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971724488527990814&#39;)">
+DerbyTicket minting was frontrunned by a group, How do you ensure that this won&#39;t happen again in-game after the game launch ? Is the game contract well secured ?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:30 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Yes it was. We learned some valuable lessons from that event. We were able to come up with a quick solution for the front-running event, but we&#39;re doubling down on our security on the future.
+
+Here&#39;s our most recent project audit for our $DBY token:
+<a href="https://twitter.com/metaderby/status/1518193297126088704?s=20&amp;t=ASM_u7rIyCTHOO9nQB5Yog">https://twitter.com/metaderby/status/1518193297126088704?s=20&amp;t=ASM_u7rIyCTHOO9nQB5Yog</a>
+
+We take the security of our game and our users very seriously. Our development team has placed extra emphasis on our smart contract security.</span>
+
+                    </div>
+
+
+                        <div class="chatlog__embed">
+                                <div class="chatlog__embed-color-pill" style="background-color: rgba(29, 161, 242, 255)"></div>
+
+                            <div class="chatlog__embed-content-container">
+                                <div class="chatlog__embed-content">
+                                    <div class="chatlog__embed-text">
+                                            <div class="chatlog__embed-author-container">
+                                                    <img class="chatlog__embed-author-icon" src="https://images-ext-1.discordapp.net/external/jQbSKhEnyhn-57Ngs-_dNdKfqiIjMhngmy4AwpnrrKg/https/pbs.twimg.com/profile_images/1514540634480074753/yk3cCrSp_400x400.png" alt="Author icon" loading="lazy" onerror="this.style.visibility='hidden'">
+
+                                                        <a class="chatlog__embed-author-link" href="https://twitter.com/metaderby">
+                                                            <div class="chatlog__embed-author">&#128014;MetaDerby&#128314; (@metaderby)</div>
+                                                        </a>
+                                            </div>
+
+
+                                            <div class="chatlog__embed-description">
+                                                <div class="chatlog__markdown chatlog__markdown-preserve">Our development team is committed to providing the strongest, safest, and most secure product possible at #MetaDerby.
+
+Pore over our most recent audit report from Geek Cartel here⬇️
+
+<a href="https://t.co/lif6fiYNeo">https://t.co/lif6fiYNeo</a></div>
+                                            </div>
+
+                                    </div>
+
+                                </div>
+
+                                    <div class="chatlog__embed-image-container">
+                                        <a class="chatlog__embed-image-link" href="https://images-ext-1.discordapp.net/external/INKKF-dxX72kK_7lMm74lGWV33DSkH9HWP8CtUJnjAo/https/pbs.twimg.com/media/FRG0ve9UYAAyg0K.png">
+                                            <img class="chatlog__embed-image" src="https://images-ext-1.discordapp.net/external/INKKF-dxX72kK_7lMm74lGWV33DSkH9HWP8CtUJnjAo/https/pbs.twimg.com/media/FRG0ve9UYAAyg0K.png" alt="Image" loading="lazy">
+                                        </a>
+                                    </div>
+
+                                    <div class="chatlog__embed-footer">
+                                            <img class="chatlog__embed-footer-icon" src="https://images-ext-1.discordapp.net/external/bXJWV2Y_F3XSra_kEqIYXAAsI3m1meckfLhYuWzxIfI/https/abs.twimg.com/icons/apple-touch-icon-192x192.png" alt="Footer icon" loading="lazy">
+
+                                        <span class="chatlog__embed-footer-text">
+Twitter
+ • 
+24-Apr-22 01:41 PM                                        </span>
+                                    </div>
+                            </div>
+                        </div>
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="Yaymin">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="Yaymin" src="https://cdn.discordapp.com/emojis/958982742857621554.png" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971751763336101908" class="chatlog__message-container " data-message-id="971751763336101908">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/336528182247424002/783fcd84c16114a99415352d0c6cb955.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(151, 127, 127)" title="uluscuturk｜ToonLands#2006">uluscuturk｜ToonLands</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971726006849245224&#39;)">
+1️⃣ There are too many P2E games and some of them just lived a few months/weeks ago(Such as Crabada, Avalant, Chkin, and Hoppers). I believe one of the most important problems is <strong>sustainability with </strong>reward coins&#39; value<strong> </strong>and the <strong>total supply of NFTs</strong>. 
+
+<img loading="lazy" class="chatlog__emoji " alt="🐎" title="racehorse" src="https://twemoji.maxcdn.com/2/svg/1f40e.svg"> Firstly, successful Projects come with <strong>fatigue </strong>so players can not gain unlimited rewards. 
+
+<img loading="lazy" class="chatlog__emoji " alt="🐎" title="racehorse" src="https://twemoji.maxcdn.com/2/svg/1f40e.svg"> Secondly, when the total supply is too much, NFTs value down in the long/short term. The value of NFTs depends on the number of players, and classic supply/demands.  
+
+<img loading="lazy" class="chatlog__emoji " alt="🌍" title="earth_africa" src="https://twemoji.maxcdn.com/2/svg/1f30d.svg"> Can you explain, How do you intend to overcome these difficulties?
+
+2️⃣ My second question is about real-life horse and game horse comparison. <strong>The real-life horse can be competitive for 2-3 years</strong>, then they become breeding the protect pure blood for next generations. Does the team have a plan to retire the horse in long term? or when we have the Legendary fastest horse, that horse will keep racing without any fatigue in long term.                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:34 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">1. I think the sustainability of a game lies in a) a dynamic tokenomic &amp; game mechanism; b) a strong bonding between the players and the game. 
+
+I don&#39;t think any players can have unlimited earning in each game tbh;  at MetaDerby the NFT circulation will be first managed by  limited NFT sales. We will introduce more details when breeding goes live. 
+
+2. At MetaDerby, each horse can only breed 7 times in life. We also consider applying an NFT burning mechanism. the details are in development and we will update in the whitepaper when it&#39;s ready. Thanks!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">7</span>
+                            </div>
+                            <div class="chatlog__reaction" title="clap">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128079;" src="https://twemoji.maxcdn.com/2/svg/1f44f.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971752213351387156" class="chatlog__message-container " data-message-id="971752213351387156">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/918853035940253696/2d3af53eb66f0b916205f531aa6cb5c0.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="emuzu#3628">emuzu</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971735642914553887&#39;)">
+I assume that when I move up a level, I will move up a class, but will I be forced to race in the higher class?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:36 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">To make it fair, you race with other horses of the same class.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="pray">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128591;" src="https://twemoji.maxcdn.com/2/svg/1f64f.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="muscle">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128170;" src="https://twemoji.maxcdn.com/2/svg/1f4aa.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971753270009794560" class="chatlog__message-container " data-message-id="971753270009794560">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:40 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Alright, get ready everybody! We&#39;re opening the chat to live questions! 
+
+What do you want to ask the MetaDerby core team in the hot seat? Bring it on!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971753408832872449" class="chatlog__message-container " data-message-id="971753408832872449">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/380751882525736971/5f44ed64eb340e6fa5e7cfee8bf47146.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="gorkemyavuz#4830">gorkemyavuz</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971737405839257620&#39;)">
+When the DBY token was released, its distribution was made to normal addresses. Normally this is done to wallets or contracts that require multiple signatures. The fact that you didn&#39;t make this distribution on the contract made me suspicious. It looks like a substantial amount of DBYs are unlocked assets. It may be healthier to carry it over the contract to give confidence to users. Why did you distribute DBY tokens to regular addresses?
+
+Who are the people who have smart contract knowledge in the project and will move the project to the blockchain? I&#39;m not talking about personal information, is there a portfolio to prove his education and knowledge in the field of software? Because DBY assets are distributed unlocked and not tied to any contracts, which scares me as an investor. The team may remain confidential, but why isn&#39;t this software information shared with people?
+
+A Metaderby Ticket minti was made on Kalao. Kalao doesn&#39;t do contract validation on the snowtrace side. As someone who has studied the technical details of this project, I cannot see the source codes of the tickets and this is a minus in trust. How do you plan to turn such disadvantages into advantages?
+
+The fact that the team attempting such a game has mint on their own website and creates their own marketplace affects me more. Because it shows that this team has knowledge. Why didn&#39;t you mint and create a marketplace from your own website?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:41 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">This is a valid concern but I want to reassure you that our team consists of very experienced solidity coders with years of smart contract experience. In fact one of our cofounder was a tech lead in binance.us. Regarding the unlocked tokens, we are actually looking at moving it into locked contracts adhering to the cliff and vesting schedule. We are already testing the contracts with small amount of tokens. Do be patient with us as we are focusing on the beta and actual game launch and the team is currently working overtime on the game launch. The locking of tokens will be our priority after that. 
+
+As for the decision to mint on Kalao, it isn&#39;t a case where we were unable to build the minting on our own website. The consideration was that Kalao would have provided more reach to potential players that are not in our ecosystem. We hear you on the trust and knowledge concerns and we will exhibit more of that in the future.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971753430047666217" class="chatlog__message-container " data-message-id="971753430047666217">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/910023248878649344/1fe12b07f33198954c7ed99151a03370.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="KIRA｜きら#4444" data-user-id="910023248878649344">KIRA｜&#127471;&#127477; MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:41 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Let&#39;s go segment 2 !!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971754338936582194" class="chatlog__message-container " data-message-id="971754338936582194">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/949187691239604284/c0ede5cb137ae72ef77fb1d14aa7a276.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="Sergio_M#9936">Sergio_M</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971753647866265620&#39;)">
+There is a limit of 10 races per day, Is this a limit for per wallet or per horse ? How can I participate in more races per day ?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:44 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Gooood question! The limit is per horse, so if you have multiple horses you can participate in more races per day.
+
+Here&#39;s the exact details:
+<a href="https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/horse-racing">https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/horse-racing</a></span>
+
+                    </div>
+
+
+                        <div class="chatlog__embed">
+                                <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                            <div class="chatlog__embed-content-container">
+                                <div class="chatlog__embed-content">
+                                    <div class="chatlog__embed-text">
+
+                                            <div class="chatlog__embed-title">
+                                                    <a class="chatlog__embed-title-link" href="https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/horse-racing">
+                                                        <div class="chatlog__markdown chatlog__markdown-preserve">Horse Racing</div>
+                                                    </a>
+                                            </div>
+
+
+                                    </div>
+
+                                        <div class="chatlog__embed-thumbnail-container">
+                                            <a class="chatlog__embed-thumbnail-link" href="https://images-ext-2.discordapp.net/external/SggWKiX5nQ183ovLYqpikcXCHmOGIyMVdDU5dALNdB4/%3Fcolor%3D%26logo%3Dhttps%253A%252F%252F3169125608-files.gitbook.io%252F~%252Ffiles%252Fv0%252Fb%252Fgitbook-x-prod.appspot.com%252Fo%252Fspaces%25252Fk32UYaZpJHnhOvZBfJIf%25252Ficon%25252FXXnw1SshFRgloPG5HbhH%25252Fblue.png%253Falt%253Dmedia%2526token%253D2774c8e9-3c84-48e5-b5fb-aa1b1d95ffd2%26theme%3D/https/app.gitbook.com/share/space/thumbnail/k32UYaZpJHnhOvZBfJIf/page/26Uip9vFEZqxiFwAPTOy.png">
+                                                <img class="chatlog__embed-thumbnail" src="https://images-ext-2.discordapp.net/external/SggWKiX5nQ183ovLYqpikcXCHmOGIyMVdDU5dALNdB4/%3Fcolor%3D%26logo%3Dhttps%253A%252F%252F3169125608-files.gitbook.io%252F~%252Ffiles%252Fv0%252Fb%252Fgitbook-x-prod.appspot.com%252Fo%252Fspaces%25252Fk32UYaZpJHnhOvZBfJIf%25252Ficon%25252FXXnw1SshFRgloPG5HbhH%25252Fblue.png%253Falt%253Dmedia%2526token%253D2774c8e9-3c84-48e5-b5fb-aa1b1d95ffd2%26theme%3D/https/app.gitbook.com/share/space/thumbnail/k32UYaZpJHnhOvZBfJIf/page/26Uip9vFEZqxiFwAPTOy.png" alt="Thumbnail" loading="lazy">
+                                            </a>
+                                        </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971754453076181023" class="chatlog__message-container " data-message-id="971754453076181023">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/611119411918536704/e975b09ab19cf149120bff4d5036cc97.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="Phoenix_Studioz#9140">Phoenix_Studioz</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971753448565530644&#39;)">
+Based on current market price minimum 10$ is required to enter each race, How do you say that MetaDerby is free to play ? Isn&#39;t this too much ?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:45 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Players will be able to get a free starter horse with a fair chance to participate in DerbyVerse. However, there will still be a small entry fee in to races. If we don&#39;t do that, what will happen is we will start to see a massive inflow of bots.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="clap">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128079;" src="https://twemoji.maxcdn.com/2/svg/1f44f.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971754869306322944" class="chatlog__message-container " data-message-id="971754869306322944">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/950636839839076382/01b4fc2408bd6c5d4b8e8cd0cd17de52.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="AltcoinBuddy | ToonLands#6529">AltcoinBuddy | ToonLands</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971753867660378202&#39;)">
+Will there be weekly tournaments in the Beta Game to earn $DBY ?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:46 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Hey AltcoinBuddy! Great question.
+
+Weekly tournament development and launch is scheduled for Q3, so not available during beta game, no.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="cry">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128546;" src="https://twemoji.maxcdn.com/2/svg/1f622.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971754950570967051" class="chatlog__message-container " data-message-id="971754950570967051">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/575401389908426753/28006a3269ac3bddbfe36195b62e2674.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/900129292615286794/e8bf2a1165130b6faa6debabe0d9b5bb.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="ojneedham&#120071;&#120098;&#120094;&#120097; a&#120109;&#120098;z ℑ&#120112;&#120105;&#120094;#4335">ojneedham&#120071;&#120098;&#120094;&#120097; a&#120109;&#120098;z ℑ&#120112;&#120105;&#120094;</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971753660151394394&#39;)">
+How excited are the team for launch??                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="misu &#127814;&#127825;&#128081;&#129421;#6969" data-user-id="575401389908426753">MetaMike | metaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:47 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">The team is very excited.  This is what we have been collectively working towards for months.  The team has also been internally testing the game and racing against each other for the past week, enjoying the game.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971755349977727056" class="chatlog__message-container " data-message-id="971755349977727056">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/575401389908426753/28006a3269ac3bddbfe36195b62e2674.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/331649517785055234/b40f90f3eeead68f4ba6516b07b3f1e0.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(231, 76, 60)" title="chokochin#2554">chokochin</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971755236073046057&#39;)">
+Is the beta Avalanche Fuji Testnet? Or is it the mainnet?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="misu &#127814;&#127825;&#128081;&#129421;#6969" data-user-id="575401389908426753">MetaMike | metaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:48 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">beta is on mainnet</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971755804145356805" class="chatlog__message-container " data-message-id="971755804145356805">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/961106192627802162/03b6ee62e26630814d03570e279a9bc2.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="Zlinky#1319">Zlinky</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971754958032625664&#39;)">
+What deflationary mechanics are in place, and are there any rewards for holding or staking $DBY token?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:50 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Most of the fees collected in-game and breeding are burned. As for DBY you will be able to participate in key governance votes but hey, decentralisation is a journey and not suitable at this stage of development. Stay tuned to the info on the staking of DBY which will be released soon.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971756027013922816" class="chatlog__message-container " data-message-id="971756027013922816">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/806029418262298664/ae1031e3661f0b5014a490f312ead295.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="JLaudybell#8534">JLaudybell</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971755017675608124&#39;)">
+Trader Joe had a huge impact on the avalanche network. What is your partnership between trader joe and metaderby?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:51 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Trader Joe was our premier token listing partner for $DBY and $HOOF. We listed both tokens to the public with them first, on April 25th and 26th. 
+
+We love their branding and cooperation with so many AVAX projects. They were our clear choice for public token listing. Shoutout to the Trader Joe Team!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                            <div class="chatlog__reaction" title="heart">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="❤️" src="https://twemoji.maxcdn.com/2/svg/2764.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971756177933365289" class="chatlog__message-container " data-message-id="971756177933365289">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/360301374518460417/c2753289503bc01ea2aff9c4836d68de.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(195, 186, 255)" title="石原BB#2628">石原BB</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971755487395741736&#39;)">
+Can we bet the horse haha?<img loading="lazy" class="chatlog__emoji " alt="🤣" title="rofl" src="https://twemoji.maxcdn.com/2/svg/1f923.svg">                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:52 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">COMING SOON. say no more!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971756419244240946" class="chatlog__message-container " data-message-id="971756419244240946">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/931102110295138304/1f25063b63abea3b0e01c2b94afbf9f9.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="" title="MetaDerby 6#2230" data-user-id="931102110295138304">MetaDerby 6</span>
+
+                            <span class="chatlog__bot-label">BOT</span>
+
+                        <span class="chatlog__timestamp">05-May-22 02:53 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">GG <span class="chatlog__markdown-mention" title="pepecopter POG#4073">@pepecopter POG</span>, you just advanced to level 1!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971756516757610576" class="chatlog__message-container " data-message-id="971756516757610576">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:53 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Also a starter horse (free horse) can only race up to 10 times per day
+
+Players will need to complete various social tasks to get a starter horse. So there are entry requirements too
+See details here: <a href="https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/starter-horse">https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/starter-horse</a></span>
+
+                    </div>
+
+
+                        <div class="chatlog__embed">
+                                <div class="chatlog__embed-color-pill chatlog__embed-color-pill--default"></div>
+
+                            <div class="chatlog__embed-content-container">
+                                <div class="chatlog__embed-content">
+                                    <div class="chatlog__embed-text">
+
+                                            <div class="chatlog__embed-title">
+                                                    <a class="chatlog__embed-title-link" href="https://metaderby-1.gitbook.io/metaderby-whitepaper/gameplay/starter-horse">
+                                                        <div class="chatlog__markdown chatlog__markdown-preserve">Starter Horse</div>
+                                                    </a>
+                                            </div>
+
+
+                                    </div>
+
+                                        <div class="chatlog__embed-thumbnail-container">
+                                            <a class="chatlog__embed-thumbnail-link" href="https://images-ext-1.discordapp.net/external/lhH4NXPe1iaJq-n7NzazAlNLHfUn6sot0850zfZOKAI/%3Fcolor%3D%26logo%3Dhttps%253A%252F%252F3169125608-files.gitbook.io%252F~%252Ffiles%252Fv0%252Fb%252Fgitbook-x-prod.appspot.com%252Fo%252Fspaces%25252Fk32UYaZpJHnhOvZBfJIf%25252Ficon%25252FXXnw1SshFRgloPG5HbhH%25252Fblue.png%253Falt%253Dmedia%2526token%253D2774c8e9-3c84-48e5-b5fb-aa1b1d95ffd2%26theme%3D/https/app.gitbook.com/share/space/thumbnail/k32UYaZpJHnhOvZBfJIf/page/DSveA89SCaSrx0rtxW5B.png">
+                                                <img class="chatlog__embed-thumbnail" src="https://images-ext-1.discordapp.net/external/lhH4NXPe1iaJq-n7NzazAlNLHfUn6sot0850zfZOKAI/%3Fcolor%3D%26logo%3Dhttps%253A%252F%252F3169125608-files.gitbook.io%252F~%252Ffiles%252Fv0%252Fb%252Fgitbook-x-prod.appspot.com%252Fo%252Fspaces%25252Fk32UYaZpJHnhOvZBfJIf%25252Ficon%25252FXXnw1SshFRgloPG5HbhH%25252Fblue.png%253Falt%253Dmedia%2526token%253D2774c8e9-3c84-48e5-b5fb-aa1b1d95ffd2%26theme%3D/https/app.gitbook.com/share/space/thumbnail/k32UYaZpJHnhOvZBfJIf/page/DSveA89SCaSrx0rtxW5B.png" alt="Thumbnail" loading="lazy">
+                                            </a>
+                                        </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971756639411662908" class="chatlog__message-container " data-message-id="971756639411662908">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/950633986261135380/499aca60a82e6b98ca268369d77473ca.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="DareDevil#7609">DareDevil</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971754254022868992&#39;)">
+Can I watch Beta racing in my mobile phone or Should I use only PC ?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:53 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">PC will be better for now. We are building around mobile once the PC experience is stable.</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971756646730719332" class="chatlog__message-container " data-message-id="971756646730719332">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/928611087820136459/924bae6cd99d04fd22a01f2079b0167e.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="STEVEN LEE#0924">STEVEN LEE</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971753738060595251&#39;)">
+How does Metaderby solve the problem of player monetization, and how does metaderby ensure that players stick around                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:53 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">I just won a race 3 minutes ago <img loading="lazy" class="chatlog__emoji " alt="😅" title="sweat_smile" src="https://twemoji.maxcdn.com/2/svg/1f605.svg"></span>
+
+                    </div>
+
+                    <div class="chatlog__attachment " onclick="">
+
+                            <a href="https://cdn.discordapp.com/attachments/931114421433040926/971756643060695060/unknown.png">
+                                <img class="chatlog__attachment-media" src="https://cdn.discordapp.com/attachments/931114421433040926/971756643060695060/unknown.png" alt="Image attachment" title="Image: unknown.png (1.85 MB)" loading="lazy">
+                            </a>
+                    </div>
+                    <div class="chatlog__attachment " onclick="">
+
+                            <a href="https://cdn.discordapp.com/attachments/931114421433040926/971756643442360410/unknown.png">
+                                <img class="chatlog__attachment-media" src="https://cdn.discordapp.com/attachments/931114421433040926/971756643442360410/unknown.png" alt="Image attachment" title="Image: unknown.png (1.61 MB)" loading="lazy">
+                            </a>
+                    </div>
+                    <div class="chatlog__attachment " onclick="">
+
+                            <a href="https://cdn.discordapp.com/attachments/931114421433040926/971756643803103292/unknown.png">
+                                <img class="chatlog__attachment-media" src="https://cdn.discordapp.com/attachments/931114421433040926/971756643803103292/unknown.png" alt="Image attachment" title="Image: unknown.png (1.56 MB)" loading="lazy">
+                            </a>
+                    </div>
+                    <div class="chatlog__attachment " onclick="">
+
+                            <a href="https://cdn.discordapp.com/attachments/931114421433040926/971756644134440980/unknown.png">
+                                <img class="chatlog__attachment-media" src="https://cdn.discordapp.com/attachments/931114421433040926/971756644134440980/unknown.png" alt="Image attachment" title="Image: unknown.png (300.78 KB)" loading="lazy">
+                            </a>
+                    </div>
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971757484530348042" class="chatlog__message-container " data-message-id="971757484530348042">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/806029418262298664/ae1031e3661f0b5014a490f312ead295.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="JLaudybell#8534">JLaudybell</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971757182674681926&#39;)">
+What is your team takes against bugs that are abused by players? would the team take immediate action regard to those and is the team confident handling hackers or unfair gameplay?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:57 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">We have a subteam dedicated to analysing daily reports on players earnings and if there are any discrepancies we will take action immediately.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="blush">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128522;" src="https://twemoji.maxcdn.com/2/svg/1f60a.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">5</span>
+                            </div>
+                            <div class="chatlog__reaction" title="muscle">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128170;" src="https://twemoji.maxcdn.com/2/svg/1f4aa.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971757818468270150" class="chatlog__message-container " data-message-id="971757818468270150">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/embed/avatars/3.png" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="pepecopter POG#4073">pepecopter POG</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971755485676044288&#39;)">
+ive been looking on-chain for a few days regarding $HOOF and have identified the main wallet (prolly dev wallet) since its able to mint $HOOF have been sending out $HOOF tokens to various wallets in random quantums up to 15k $HOOF. After these wallets received the tokens most proceed to sell it. Is there private sale allocation for $HOOF to explain this because theres nth written on the litepaper showing $HOOF token distribution?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 02:58 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">There&#39;s no private sale allocation for $HOOF. It&#39;s fair launch. 
+
+The HOOF token supply is dynamic. More $HOOF token will be minted when more players enter the game, and the HOOF tokens are burned in-game, too. 
+We recently have run some HOOF giveaways for the community. So the transactions you&#39;ve spotted should be the giveaway distribution.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="star_struck">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129321;" src="https://twemoji.maxcdn.com/2/svg/1f929.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">2</span>
+                            </div>
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971758423421108254" class="chatlog__message-container " data-message-id="971758423421108254">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/950636839839076382/01b4fc2408bd6c5d4b8e8cd0cd17de52.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="AltcoinBuddy | ToonLands#6529">AltcoinBuddy | ToonLands</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971757705549209600&#39;)">
+Out of curiosity, Could you please give us the Time of the game release tomorrow <img loading="lazy" class="chatlog__emoji " alt="Meehmin" title="Meehmin" src="https://cdn.discordapp.com/emojis/958982521725534218.png">                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 03:01 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">We were waiting for someone to ask this question! Beta release will be on May 6 @ 13:00 UTC <img loading="lazy" class="chatlog__emoji " alt="Lovemin" title="Lovemin" src="https://cdn.discordapp.com/emojis/958982463995121674.png"></span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="fire">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128293;" src="https://twemoji.maxcdn.com/2/svg/1f525.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971759195466645594" class="chatlog__message-container " data-message-id="971759195466645594">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/888301685196341268/9b42e0e67274313e37df80dd805fbaaa.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="Linson#6225">Linson</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971758436016586792&#39;)">
+Hello, I saw that the white paper will have a mobile app. Has the team considered wallet compatibility? The metamask on the phone is hard to use!
+<span class="chatlog__markdown-mention" title="0xKrypton#4415">@Muse ｜MetaDerby</span> <span class="chatlog__markdown-mention" title="komoko#7650">@Komoko | MetaDerby</span> <span class="chatlog__markdown-mention" title="SkyC#9809">@SkyC</span>                                    </span>
+
+                                        <span class="chatlog__reference-edited-timestamp" title="05-May-22 03:02 PM">(edited)</span>
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 03:04 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Yes we do! We will make it mobile adaptive first!</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="star_struck">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#129321;" src="https://twemoji.maxcdn.com/2/svg/1f929.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971759201871339631" class="chatlog__message-container " data-message-id="971759201871339631">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/514537976156389386/6c5e4488b28cf1f4dcf0fb91f242d17d.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/750193697307623454/f45d08084a4051b33ab78a5094848628.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="" title="net658#1037">net658</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971758406148964392&#39;)">
+Is there any good anti cheating program for plug-ins in the game?                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(26, 188, 156)" title="komoko#7650" data-user-id="514537976156389386">Komoko | MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 03:04 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">We do have some anti-cheating mechanism installed but anti-cheating is always a cat and mouse game. It&#39;s hard to consider all aspects of it. Whenever we spot something, we squash it. But ppl will always come up with more innovative methods to cheat and we will squash it again.</span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="thumbsup">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128077;" src="https://twemoji.maxcdn.com/2/svg/1f44d.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">3</span>
+                            </div>
+                            <div class="chatlog__reaction" title="muscle">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="&#128170;" src="https://twemoji.maxcdn.com/2/svg/1f4aa.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971759621272383539" class="chatlog__message-container " data-message-id="971759621272383539">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 03:05 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Get your last questions in! Beta Game Launch AMA is coming to a close!</span>
+
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971760754720129034" class="chatlog__message-container " data-message-id="971760754720129034">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                        <div class="chatlog__reference-symbol"></div>
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/881219635691786280/df63354eb5fcad5de28017444107ab61.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                        <div class="chatlog__reference">
+                                <img class="chatlog__reference-avatar" src="https://cdn.discordapp.com/avatars/900603977400475668/4cf22efdd94ccd7853e191a4208e7a4a.png?size=512" alt="Avatar" loading="lazy">
+                                <div class="chatlog__reference-author" style="color: rgb(155, 155, 155)" title="Louisyecheng#4994">Louisyecheng</div>
+                                <div class="chatlog__reference-content">
+                                    <span class="chatlog__reference-link" onclick="scrollToMessage(event, &#39;971758590102740993&#39;)">
+Does Metaderby have a specific approach or marketing strategy to attract new players  <span class="chatlog__markdown-mention" title="0xKrypton#4415">@Muse ｜MetaDerby</span>                                    </span>
+
+                                </div>
+                        </div>
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="0xKrypton#4415" data-user-id="881219635691786280">Muse ｜MetaDerby</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 03:10 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Free-to-play would be a friendly approach for beginners. We&#39;re also launching more local channels and localize the content into multiple languages to educate more users <img loading="lazy" class="chatlog__emoji " alt="🙂" title="slight_smile" src="https://twemoji.maxcdn.com/2/svg/1f642.svg"></span>
+
+                    </div>
+
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction" title="heart">
+                                <img class="chatlog__emoji chatlog__emoji--small" alt="❤️" src="https://twemoji.maxcdn.com/2/svg/2764.svg" loading="lazy">
+                                <span class="chatlog__reaction-count">4</span>
+                            </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="chatlog__message-group">
+    <div id="chatlog__message-container-971762334437617664" class="chatlog__message-container " data-message-id="971762334437617664">
+        <div class="chatlog__message">
+            <div class="chatlog__message-aside">
+                    <img class="chatlog__avatar" src="https://cdn.discordapp.com/avatars/963428216201162752/1da89e018bc14b881116ee95b04c921a.png?size=512" alt="Avatar" loading="lazy">
+            </div>
+
+            <div class="chatlog__message-primary">
+                    <div class="chatlog__header">
+                        <span class="chatlog__author" style="color: rgb(155, 89, 182)" title="SkyC#9809" data-user-id="963428216201162752">SkyC</span>
+
+
+                        <span class="chatlog__timestamp">05-May-22 03:16 PM</span>
+                    </div>
+
+                    <div class="chatlog__content chatlog__markdown">
+                        <span class="chatlog__markdown-preserve">Thank you everyone for your excellent questions and undying support! Our AMA is coming to an end!
+
+Beta Game Launch: May 6th, 2022 @ 13:00pm UTC!</span>
+
+                            <span class="chatlog__edited-timestamp" title="05-May-22 03:23 PM">(edited)</span>
+                    </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">MetaDerby Discord AMA 05/05/22</div>
+</div>
+
+</body>
+
+</html>
